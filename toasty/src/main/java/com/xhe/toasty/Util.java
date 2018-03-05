@@ -1,4 +1,4 @@
-package com.xhe.ptoast;
+package com.xhe.toasty;
 
 import android.app.ActivityManager;
 import android.content.Context;

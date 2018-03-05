@@ -3,7 +3,7 @@ package com.xhe.toastdemo
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.xhe.ptoast.PToast
+import com.xhe.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_seconds.*
 
 /**
@@ -14,7 +14,7 @@ class SecondsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_seconds)
         tv1.setOnClickListener {
-            PToast.makeText(this, "第二页也也").replace(false).show()
+            Toasty.makeText(this, "第二页也也").replace(false).show()
         }
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xhe.ptoast">
+    package="com.xhe.toasty">
 
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <application android:theme="@style/AppTheme"></application>

@@ -1,4 +1,4 @@
-package com.xhe.ptoast;
+package com.xhe.toasty;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,10 +18,10 @@ import java.util.Iterator;
 /**
  * Created by hexiang on 2018/2/6.
  */
-public class PToast {
+public class Toasty {
 
     private static boolean isShowing = false;//toast是否正在显示，标志全局的
-    private static ArrayDeque<PToast> queue = new ArrayDeque<>();//先进先出，保持队列是唯一的
+    private static ArrayDeque<Toasty> queue = new ArrayDeque<>();//先进先出，保持队列是唯一的
     private static final int ANIMATION_DURATION = 200;//toast进入界面的动画所需时间
 
 
@@ -48,7 +48,7 @@ public class PToast {
         public static final int BOTTOM = 2;
     }
 
-    private PToast() {
+    private Toasty() {
     }
 
     /**
@@ -56,8 +56,8 @@ public class PToast {
      * @param msg
      * @return
      */
-    public static PToast makeText(Context context, String msg) {
-        PToast pToast = new PToast();
+    public static Toasty makeText(Context context, String msg) {
+        Toasty pToast = new Toasty();
         if (!(context instanceof Activity)) {
             throw new RuntimeException("$ context must be activity");
         }
@@ -75,7 +75,7 @@ public class PToast {
      * @param duration
      * @return
      */
-    public PToast duration(@IntRange(from = 1) long duration) {
+    public Toasty duration(@IntRange(from = 1) long duration) {
         this.duration = duration;
         return this;
     }
@@ -87,7 +87,7 @@ public class PToast {
      * @param gravity
      * @return
      */
-    public PToast gravity(@ToastGravity int gravity) {
+    public Toasty gravity(@ToastGravity int gravity) {
         this.gravity = gravity;
         return this;
     }
@@ -98,7 +98,7 @@ public class PToast {
      * @param replace
      * @return
      */
-    public PToast replace(boolean replace) {
+    public Toasty replace(boolean replace) {
         isReplace = replace;
         return this;
     }
@@ -110,7 +110,7 @@ public class PToast {
             //直接替换
             if (isReplace && !queue.isEmpty()) {
                 //拿到当前正在现实的那个toast对象
-                PToast toast = queue.getFirst();
+                Toasty toast = queue.getFirst();
                 //清空栈
                 queue.clear();
                 //移除handler的通知
@@ -139,7 +139,7 @@ public class PToast {
         Log.d("PToast", getClass().getSimpleName() + "------wakeUp()");
         isShowing = true;
         if (!queue.isEmpty()) {
-            PToast util = queue.getFirst();
+            Toasty util = queue.getFirst();
             util.doshow();
         } else {
             isShowing = false;
@@ -254,9 +254,9 @@ public class PToast {
      * @param activity
      */
     private void removeActivityAllToast(Activity activity) {
-        ArrayDeque<PToast> clone = queue.clone();
+        ArrayDeque<Toasty> clone = queue.clone();
         for (Iterator itr = clone.iterator(); itr.hasNext(); ) {
-            PToast toast = (PToast) itr.next();
+            Toasty toast = (Toasty) itr.next();
             if (toast.activity.getClass().getName().equals(activity.getClass().getName())) {
                 queue.removeFirst();
             }

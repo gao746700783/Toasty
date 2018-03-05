@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.xhe.ptoast.PToast
+import com.xhe.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -14,9 +14,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         tv1.setOnClickListener {
-            PToast.makeText(this, tv1.text.toString())
-                    .duration(PToast.Time.LENGTH_LONG) //持续时间
-                    .gravity(PToast.Gravity.BOTTOM) //位置
+            Toasty.makeText(this, tv1.text.toString())
+                    .duration(Toasty.Time.LENGTH_LONG) //持续时间
+                    .gravity(Toasty.Gravity.BOTTOM) //位置
                     .replace(false) //是否直接替换
                     .show()
 
@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         tv2.setOnClickListener {
 
-            PToast.makeText(this, tv2.text.toString())
-                    .gravity(PToast.Gravity.TOP)
+            Toasty.makeText(this, tv2.text.toString())
+                    .gravity(Toasty.Gravity.TOP)
                     .replace(true)
                     .show()
         }

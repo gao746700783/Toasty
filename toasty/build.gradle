@@ -30,7 +30,7 @@ publish {
     artifactId = 'ptoast'//项目名称
     publishVersion = '1.0.0'//版本号
     desc = '自定义toast'//描述，不重要
-    website = 'https://github.com'
+    website = 'https://github.com/hexiang1993/PToast'
 }
 
 dependencies {

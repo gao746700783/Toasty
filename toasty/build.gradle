@@ -5,13 +5,16 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
 
+    lintOptions {
+        abortOnError false
+    }
 
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 1000
+        versionName "1.0.0"
     }
 
     buildTypes {
@@ -26,11 +29,11 @@ android {
 
 publish {
     userOrg = 'adrianzuo'//bintray.com用户名
-    groupId = 'com.che300'//jcenter上的路径
-    artifactId = 'ptoast'//项目名称
+    groupId = 'com.hexiang'//jcenter上的路径
+    artifactId = 'toasty'//项目名称
     publishVersion = '1.0.0'//版本号
-    desc = '自定义toast'//描述，不重要
-    website = 'https://github.com/hexiang1993/PToast'
+    desc = 'custom toast'//描述，不重要
+    website = 'https://github.com/car300/Toasty'
 }
 
 dependencies {

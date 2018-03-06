@@ -149,7 +149,7 @@ public class Toasty {
 
     private void doshow() {
         container = (ViewGroup) activity.findViewById(android.R.id.content);
-        view = activity.getLayoutInflater().inflate(R.layout.toast_layout, null);
+        view = activity.getLayoutInflater().inflate(R.layout.toast_layout_hexiang, null);
         container.addView(view);
         view.setVisibility(View.GONE);
         //设置显示内容

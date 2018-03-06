@@ -12,7 +12,7 @@ compile 'com.hexiang:toasty:1.0.1'
 ~~~
 
 ~~~
-PToast.makeText(this, msg)
+Toasty.makeText(this, msg)
       .duration(PToast.Time.LENGTH_LONG) //持续时间
       .gravity(PToast.Gravity.BOTTOM) //位置
       .replace(false) //是否直接替换

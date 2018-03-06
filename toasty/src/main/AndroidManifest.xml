@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xhe.toasty">
 
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <application android:theme="@style/AppTheme"></application>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!--android:theme="@style/AppTheme"-->
+    <application>
+
+    </application>
 
 </manifest>

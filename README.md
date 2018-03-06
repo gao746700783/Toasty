@@ -5,6 +5,12 @@
 * 2.设置位置
 * 3.是否直接替换
 
+#### 使用：
+在build.gradle中导入
+~~~
+compile 'com.hexiang:toasty:1.0.1'
+~~~
+
 ~~~
 PToast.makeText(this, msg)
       .duration(PToast.Time.LENGTH_LONG) //持续时间
@@ -12,3 +18,4 @@ PToast.makeText(this, msg)
       .replace(false) //是否直接替换
       .show()
 ~~~
+

@@ -1,4 +1,4 @@
-# PToast
+# Toasty
 ### 自定义toast
 #### 功能：
 * 1.设置时间

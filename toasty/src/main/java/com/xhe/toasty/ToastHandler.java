@@ -1,5 +1,6 @@
 package com.xhe.toasty;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -12,8 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
@@ -25,7 +24,7 @@ import java.util.List;
 
 public class ToastHandler extends Handler {
     private static WeakReference<Activity> mWeakActivity;
-    private WeakReference<View> mWeakView;
+    private WeakReference<ToastInterface> mWeakView;
 
     private static boolean isShowing = false;//toast是否正在显示，标志全局的
     private static ArrayDeque<ToastyBuilder> queue = new ArrayDeque<>();
@@ -34,11 +33,18 @@ public class ToastHandler extends Handler {
 
     private ToastHandler(Activity activity) {
         mWeakActivity = new WeakReference<Activity>(activity);
-        ViewGroup container = (ViewGroup) activity.findViewById(android.R.id.content);
-        View view = activity.getLayoutInflater().inflate(R.layout.toast_layout_hexiang, null);
-        mWeakView = new WeakReference<View>(view);
-        container.addView(view);
-        view.setVisibility(View.GONE);
+
+        ToastInterface toastView = Toasty.getToastFactory().createToastView(activity);
+        mWeakView = new WeakReference<ToastInterface>(toastView);
+        ViewGroup.LayoutParams lp = toastView.getRealView().getLayoutParams();
+        if (lp == null) {
+            lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        }
+
+        FrameLayout container = (FrameLayout) activity.findViewById(android.R.id.content);
+        container.addView(toastView.getRealView(), lp);
+        toastView.getRealView().setVisibility(View.GONE);
+
         clear();
     }
 
@@ -92,27 +98,23 @@ public class ToastHandler extends Handler {
 
     private void setToastMsg(ToastyBuilder builder) {
         //设置显示内容
-        View view = mWeakView.get();
-        if (view == null) {
+        ToastInterface toastView = mWeakView.get();
+        if (toastView == null) {
             return;
         }
-        TextView mTextView = (TextView) view.findViewById(R.id.mbMessage);
-        mTextView.setText(builder.getMsg());
+        toastView.setMessage(builder.getMsg());
 
         //设置显示位置
-        LinearLayout llContanier = (LinearLayout) view.findViewById(R.id.mbContainer);
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mTextView.getLayoutParams();
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) toastView.getRealView().getLayoutParams();
         switch (builder.getGravity()) {
             case Gravity.TOP:
-                lp.gravity = android.view.Gravity.TOP | android.view.Gravity.CENTER;
-//                llContanier.setGravity();
+                lp.gravity = Gravity.TOP | Gravity.CENTER;
                 break;
             case Gravity.CENTER:
-                lp.gravity = android.view.Gravity.CENTER;
-                llContanier.setGravity(android.view.Gravity.CENTER);
+                lp.gravity = Gravity.CENTER;
                 break;
             case Gravity.BOTTOM:
-                lp.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.CENTER;
+                lp.gravity = Gravity.BOTTOM | Gravity.CENTER;
                 break;
         }
     }
@@ -129,11 +131,11 @@ public class ToastHandler extends Handler {
 
     private void showToast(final ToastyBuilder builder) {
         if (!isAppOnForeground()) {  //检查activity处于前台才显示，否则，移除该activity所有的toast
-            View view = mWeakView.get();
-            if (view == null) {
+            ToastInterface toastView = mWeakView.get();
+            if (toastView == null) {
                 return;
             }
-            view.setVisibility(View.GONE);
+            toastView.getRealView().setVisibility(View.GONE);
             //找出所有该activity对toast，并移除
             clear();
             return;
@@ -159,24 +161,24 @@ public class ToastHandler extends Handler {
 
             }
         });
-        View view = mWeakView.get();
-        if (view == null) {
+        ToastInterface toastView = mWeakView.get();
+        if (toastView == null) {
             return;
         }
-        view.clearAnimation();
-        view.setVisibility(View.VISIBLE);
-        view.startAnimation(mFadeInAnimation);
+        toastView.getRealView().clearAnimation();
+        toastView.getRealView().setVisibility(View.VISIBLE);
+        toastView.getRealView().startAnimation(mFadeInAnimation);
 
 
     }
 
     private void hideToast() {
         if (!isAppOnForeground()) {
-            View view = mWeakView.get();
-            if (view == null) {
+            ToastInterface toastView = mWeakView.get();
+            if (toastView == null) {
                 return;
             }
-            view.setVisibility(View.GONE);
+            toastView.getRealView().setVisibility(View.GONE);
             //找出所有该activity对toast，并移除
             clear();
             return;
@@ -194,11 +196,11 @@ public class ToastHandler extends Handler {
             public void onAnimationEnd(Animation animation) {
                 Log.d("PToast", getClass().getSimpleName() + "------mFadeOutAnimation-onAnimationEnd");
                 // 隐藏布局，不使用remove方法为防止多次创建多个布局
-                View view = mWeakView.get();
-                if (view == null) {
+                ToastInterface toastView = mWeakView.get();
+                if (toastView == null) {
                     return;
                 }
-                view.setVisibility(View.GONE);
+                toastView.getRealView().setVisibility(View.GONE);
                 isShowing = false;
                 if (!queue.isEmpty()) {
                     ToastyBuilder builder = queue.removeLast();
@@ -212,11 +214,11 @@ public class ToastHandler extends Handler {
 
             }
         });
-        View view = mWeakView.get();
-        if (view == null) {
+        ToastInterface toastView = mWeakView.get();
+        if (toastView == null) {
             return;
         }
-        view.startAnimation(mFadeOutAnimation);
+        toastView.getRealView().startAnimation(mFadeOutAnimation);
     }
 
 

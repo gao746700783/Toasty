@@ -1,24 +1,13 @@
 package com.xhe.toasty;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Looper;
-import android.os.Message;
-import android.support.annotation.IntRange;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayDeque;
-import java.util.Iterator;
+import android.widget.FrameLayout;
 
 /**
  * Created by hexiang on 2018/2/6.
@@ -32,6 +21,15 @@ public class Toasty {
     public static final int LENGTH_SHORT = 1500;
     public static final int LENGTH_LONG = 2500;
 
+    public static ToastFactory getToastFactory() {
+        return toastFactory;
+    }
+
+    public static void setToastFactory(ToastFactory toastFactory) {
+        Toasty.toastFactory = toastFactory;
+    }
+
+    private static ToastFactory toastFactory;
 
     private Toasty(Activity activity) {
     }
@@ -47,8 +45,47 @@ public class Toasty {
         if (!isOnMainThread()) {
             throw new RuntimeException("$ toasty must be builder in MainThread");
         }
+        if (toastFactory == null) {
+            toastFactory = createDefaultToastFactory();
+        }
         handler = ToastHandler.getInstance((Activity) context);
         return new ToastyBuilder(handler);
+    }
+
+    private static ToastFactory createDefaultToastFactory() {
+
+        return new ToastFactory() {
+            @Override
+            ToastInterface createToastView(Activity activity) {
+                ToastView toastView = new ToastView(activity);
+                toastView.setTextSize(13f);
+                toastView.setTextColor(Color.WHITE);
+                toastView.setGravity(Gravity.CENTER);
+                toastView.setShadowLayer(2.75f, 0, 0, 0xBB000000);
+                toastView.setPadding(dip(activity, 18f), dip(activity, 8f), dip(activity, 18f), dip(activity, 8f));
+
+                GradientDrawable bg = new GradientDrawable();
+                bg.setCornerRadius(dip(activity, 12));
+                bg.setColor(0x77000000);
+                toastView.setBackgroundDrawable(bg);
+
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0, dip(activity, 50f), 0, dip(activity, 50f));
+                toastView.setLayoutParams(lp);
+                return toastView;
+            }
+        };
+    }
+
+    /**
+     * dp转px
+     *
+     * @param context
+     * @return
+     */
+    private static int dip(Context context, float dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, context.getResources().getDisplayMetrics());
     }
 
     /**
@@ -57,7 +94,7 @@ public class Toasty {
      * @return
      */
 
-    public static boolean isOnMainThread() {
+    private static boolean isOnMainThread() {
         return Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 

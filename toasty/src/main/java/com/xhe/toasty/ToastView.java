@@ -1,6 +1,7 @@
 package com.xhe.toasty;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -16,5 +17,10 @@ public class ToastView extends TextView implements ToastInterface {
     public void setMessage(CharSequence msg) {
         setText(msg);
 
+    }
+
+    @Override
+    public View getRealView() {
+        return this;
     }
 }

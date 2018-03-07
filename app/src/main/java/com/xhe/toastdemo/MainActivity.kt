@@ -13,12 +13,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         tv1.setOnClickListener {
             Toasty.with(this)
                     .message(tv1.text.toString())
                     .duration(Toasty.LENGTH_LONG) //持续时间
                     .gravity(Gravity.BOTTOM) //位置
+                    .replace(true)//是否直接替换
                     .waiting(true)//按顺序显示
                     .show()
 

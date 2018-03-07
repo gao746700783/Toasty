@@ -3,10 +3,13 @@ package com.xhe.toasty;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
 
+import com.xhe.toasty.interfaces.ToastDuration;
+import com.xhe.toasty.interfaces.ToastGravity;
+
 /**
  * Created by hexiang on 2018/2/6.
  */
-public class ToastyBuilder {
+final public class ToastyBuilder {
 
     private String msg;//展示的内容
 

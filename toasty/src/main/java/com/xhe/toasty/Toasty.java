@@ -9,6 +9,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 
+import com.xhe.toasty.interfaces.ToastInterface;
+
 /**
  * Created by hexiang on 2018/2/6.
  */
@@ -21,7 +23,7 @@ public class Toasty {
     public static final int LENGTH_SHORT = 1500;
     public static final int LENGTH_LONG = 2500;
 
-    public static ToastFactory getToastFactory() {
+    protected static ToastFactory getToastFactory() {
         return toastFactory;
     }
 

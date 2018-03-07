@@ -1,6 +1,8 @@
-package com.xhe.toasty;
+package com.xhe.toasty.interfaces;
 
 import android.support.annotation.IntDef;
+
+import com.xhe.toasty.Toasty;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

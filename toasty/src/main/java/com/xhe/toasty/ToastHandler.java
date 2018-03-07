@@ -1,6 +1,5 @@
 package com.xhe.toasty;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -13,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
+
+import com.xhe.toasty.interfaces.ToastInterface;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
@@ -226,7 +227,7 @@ public class ToastHandler extends Handler {
     final private static int SHOW = -0x300002;
     final private static int HIDE = -0x300003;
 
-    public void show(ToastyBuilder builder) {
+    protected void show(ToastyBuilder builder) {
         Message message = obtainMessage();
         message.obj = builder;
         message.what = ADD;

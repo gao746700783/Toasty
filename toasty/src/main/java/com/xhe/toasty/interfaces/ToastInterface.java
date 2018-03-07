@@ -1,4 +1,4 @@
-package com.xhe.toasty;
+package com.xhe.toasty.interfaces;
 
 import android.view.View;
 

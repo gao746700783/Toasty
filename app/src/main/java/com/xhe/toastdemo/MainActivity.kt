@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Gravity
 import com.xhe.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -14,10 +15,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         tv1.setOnClickListener {
-            Toasty.makeText(this, tv1.text.toString())
-                    .duration(Toasty.Time.LENGTH_LONG) //持续时间
-                    .gravity(Toasty.Gravity.BOTTOM) //位置
-                    .replace(false) //是否直接替换
+            Toasty.with(this)
+                    .message(tv1.text.toString())
+                    .duration(Toasty.LENGTH_LONG) //持续时间
+                    .gravity(Gravity.BOTTOM) //位置
+                    .waiting(true)//按顺序显示
                     .show()
 
 
@@ -25,9 +27,10 @@ class MainActivity : AppCompatActivity() {
 
         tv2.setOnClickListener {
 
-            Toasty.makeText(this, tv2.text.toString())
-                    .gravity(Toasty.Gravity.TOP)
-                    .replace(true)
+            Toasty.with(this)
+                    .message(tv2.text.toString())
+                    .gravity(Gravity.TOP)
+                    .replace(true)//是否直接替换
                     .show()
         }
 

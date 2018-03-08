@@ -15,7 +15,7 @@ class SecondsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_seconds)
         tv1.setOnClickListener {
             Toasty.with(this)
-                    .message("第二页也也").replace(false).show()
+                    .message("第二页也也").replaceType(Toasty.DISCARD).show()
         }
     }
 

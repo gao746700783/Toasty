@@ -86,15 +86,16 @@ public class ToastHandler extends Handler {
             sendMessage(message);
             return;
         }
-        if (builder.isReplace()) {//直接替换当前显示的，需要移除之前消失动画
+        if (builder.getReplaceType() == Toasty.REPLACE_NOW) {//直接替换当前显示的，需要移除之前消失动画
             setToastMsg(builder);
             removeMessages(HIDE);
             sendEmptyMessageDelayed(HIDE, builder.getDuration());
             return;
         }
-        if (builder.isWaiting()) {
+        if (builder.getReplaceType() == Toasty.REPLACE_BEHIND) {
             queue.add(builder);
         }
+        //  builder.getReplaceType()==Toasty.DISCARD //## do nothing
     }
 
     private void setToastMsg(ToastyBuilder builder) {

@@ -9,16 +9,15 @@
 
 #### 在build.gradle中导入
 ~~~
-compile 'com.hexiang:toasty:1.0.2'
+compile 'com.hexiang:toasty:1.0.4'
 ~~~
 #### 使用：
 ~~~
-Toasty.with(this)
-                    .message("hello world")
+ Toasty.with(this)
+                    .message(tv1.text.toString())
                     .duration(Toasty.LENGTH_LONG) //持续时间
                     .gravity(Gravity.BOTTOM) //位置
-                    .replace(true)//是否直接替换
-                    .waiting(true)//按顺序显示，如设置replace=true则无效
+                    .replaceType(Toasty.REPLACE_NOW)//立即替换当前显示中的
                     .show()
 ~~~
 #### 自定义布局：

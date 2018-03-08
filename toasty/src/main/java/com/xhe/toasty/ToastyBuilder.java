@@ -5,6 +5,7 @@ import android.view.Gravity;
 
 import com.xhe.toasty.interfaces.ToastDuration;
 import com.xhe.toasty.interfaces.ToastGravity;
+import com.xhe.toasty.interfaces.ToastRepalceType;
 
 /**
  * Created by hexiang on 2018/2/6.
@@ -12,12 +13,21 @@ import com.xhe.toasty.interfaces.ToastGravity;
 final public class ToastyBuilder {
 
     private String msg;//展示的内容
-
-
+    /**
+     * 持续时间
+     *
+     * @see com.xhe.toasty.Toasty#LENGTH_SHORT
+     */
     private long duration = Toasty.LENGTH_SHORT;//持续时间
+
     private int gravity = Gravity.BOTTOM;//位置
-    private boolean isReplace = false;//是否直接替换
-    private boolean isWaiting = false;//是否尾缀后面展示
+    /**
+     * 显示中再次请求替换方式
+     *
+     * @see com.xhe.toasty.Toasty#DISCARD
+     */
+    private int replaceType = Toasty.DISCARD;
+
     ToastHandler toastHandler;
 
     protected ToastyBuilder(ToastHandler toastHandler) {
@@ -59,24 +69,13 @@ final public class ToastyBuilder {
     }
 
     /**
-     * 是否直接替换
+     * 显示中再次请求替换方式
      *
-     * @param replace
-     * @return
+     * @param replaceType
+     * @see com.xhe.toasty.Toasty#DISCARD
      */
-    public ToastyBuilder replace(boolean replace) {
-        isReplace = replace;
-        return this;
-    }
-
-    /**
-     * 是否尾缀后面展示
-     *
-     * @param waiting
-     * @return
-     */
-    public ToastyBuilder waiting(boolean waiting) {
-        isWaiting = waiting;
+    public ToastyBuilder replaceType(@ToastRepalceType int replaceType) {
+        this.replaceType = replaceType;
         return this;
     }
 
@@ -92,12 +91,8 @@ final public class ToastyBuilder {
         return gravity;
     }
 
-    protected boolean isReplace() {
-        return isReplace;
-    }
-
-    protected boolean isWaiting() {
-        return isWaiting;
+    protected int getReplaceType() {
+        return replaceType;
     }
 
     public void show() {

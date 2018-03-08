@@ -18,8 +18,7 @@ class MainActivity : AppCompatActivity() {
                     .message(tv1.text.toString())
                     .duration(Toasty.LENGTH_LONG) //持续时间
                     .gravity(Gravity.BOTTOM) //位置
-                    .replace(true)//是否直接替换
-                    .waiting(true)//按顺序显示
+                    .replaceType(Toasty.REPLACE_NOW)//立即替换当前显示中的
                     .show()
 
 
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             Toasty.with(this)
                     .message(tv2.text.toString())
                     .gravity(Gravity.TOP)
-                    .replace(true)//是否直接替换
+                    .replaceType(Toasty.REPLACE_BEHIND)//等待当前显示正常结束
                     .show()
         }
 

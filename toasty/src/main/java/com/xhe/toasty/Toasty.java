@@ -19,14 +19,40 @@ public class Toasty {
 
     private static ToastHandler handler;
 
-    //持续时间
+    /**
+     * 显示时间
+     *
+     * @author gengqiquan
+     * @date 2018/3/8 上午9:59
+     */
     public static final int LENGTH_SHORT = 1500;
     public static final int LENGTH_LONG = 2500;
+
+    /**
+     * 显示中再次请求替换方式
+     * <p>
+     * DISCARD 直接丢弃
+     * REPLACE_NOW 立即替换 ，不管当前显示状态，动画状态，并且延迟显示时间为当前替换者的持续时间
+     * REPLACE_BEHIND  等待当前正常显示消失完成 再显示
+     *
+     * @author gengqiquan
+     * @date 2018/3/8 上午9:57
+     */
+    public static final int DISCARD = -1;
+    public static final int REPLACE_NOW = 0;
+    public static final int REPLACE_BEHIND = 1;
+
 
     protected static ToastFactory getToastFactory() {
         return toastFactory;
     }
 
+    /**
+     * 设置toast布局生产工厂
+     *
+     * @author gengqiquan
+     * @date 2018/3/8 上午9:59
+     */
     public static void setToastFactory(ToastFactory toastFactory) {
         Toasty.toastFactory = toastFactory;
     }
@@ -37,7 +63,9 @@ public class Toasty {
     }
 
     /**
-     * @param context 必须是activity的
+     * @param context 必须是activity的上下文
+     *                <p>
+     *                弱引用持有
      * @return
      */
     public static ToastyBuilder with(Context context) {
@@ -54,6 +82,12 @@ public class Toasty {
         return new ToastyBuilder(handler);
     }
 
+    /**
+     * 创建默认toast生产工厂
+     *
+     * @author gengqiquan
+     * @date 2018/3/8 上午10:00
+     */
     private static ToastFactory createDefaultToastFactory() {
 
         return new ToastFactory() {

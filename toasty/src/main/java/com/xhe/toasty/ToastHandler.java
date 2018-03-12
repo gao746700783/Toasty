@@ -3,17 +3,11 @@ package com.xhe.toasty;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.FrameLayout;
-
-import com.xhe.toasty.interfaces.ToastInterface;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
@@ -25,32 +19,22 @@ import java.util.List;
 
 public class ToastHandler extends Handler {
     private static WeakReference<Activity> mWeakActivity;
-    private WeakReference<ToastInterface> mWeakView;
+    private WeakReference<ToastDialog> mWeakView;
 
-    private static boolean isShowing = false;//toast是否正在显示，标志全局的
     private static ArrayDeque<ToastyBuilder> queue = new ArrayDeque<>();
-    private static final int ANIMATION_DURATION = 500;//toast进入界面的动画所需时间
     private static ToastHandler handler;
 
     private ToastHandler(Activity activity) {
         mWeakActivity = new WeakReference<Activity>(activity);
 
-        ToastInterface toastView = Toasty.getToastFactory().createToastView(activity);
-        mWeakView = new WeakReference<ToastInterface>(toastView);
-        ViewGroup.LayoutParams lp = toastView.getRealView().getLayoutParams();
-        if (lp == null) {
-            lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        }
-
-        FrameLayout container = (FrameLayout) activity.findViewById(android.R.id.content);
-        container.addView(toastView.getRealView(), lp);
-        toastView.getRealView().setVisibility(View.GONE);
-
+        ToastDialog toastDialog = ToastDialog.createDialog(Toasty.getToastFactory().createToastView(activity));
+        mWeakView = new WeakReference<ToastDialog>(toastDialog);
         clear();
     }
 
+
     protected static ToastHandler getInstance(Activity newActivity) {
-        if (mWeakActivity == null || mWeakActivity.get() == null || !mWeakActivity.get().getClass().getSimpleName().equals(newActivity.getClass().getSimpleName())) {
+        if (mWeakActivity == null || mWeakActivity.get() == null || !mWeakActivity.get().equals(newActivity)) {
             handler = new ToastHandler(newActivity);
         }
         return handler;
@@ -78,7 +62,8 @@ public class ToastHandler extends Handler {
     }
 
     private void dealBuilder(ToastyBuilder builder) {
-        if (!isShowing) {//当前没有显示
+        ToastDialog toastDialog = mWeakView.get();
+        if (toastDialog == null || !toastDialog.isShowing()) {//当前没有显示
             setToastMsg(builder);
             Message message = obtainMessage();
             message.obj = builder;
@@ -100,23 +85,24 @@ public class ToastHandler extends Handler {
 
     private void setToastMsg(ToastyBuilder builder) {
         //设置显示内容
-        ToastInterface toastView = mWeakView.get();
-        if (toastView == null) {
+        ToastDialog toastDialog = mWeakView.get();
+        if (toastDialog == null) {
             return;
         }
-        toastView.setMessage(builder.getMsg());
+        toastDialog.getToastView().setMessage(builder.getMsg());
 
         //设置显示位置
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) toastView.getRealView().getLayoutParams();
         switch (builder.getGravity()) {
             case Gravity.TOP:
-                lp.gravity = Gravity.TOP | Gravity.CENTER;
+                toastDialog.getWindow().setGravity(Gravity.TOP | Gravity.CENTER);
+                toastDialog.getWindow().getAttributes().y = Toasty.dip(toastDialog.getContext(), Toasty.offsetYDip);
                 break;
             case Gravity.CENTER:
-                lp.gravity = Gravity.CENTER;
+                toastDialog.getWindow().setGravity(Gravity.CENTER);
                 break;
             case Gravity.BOTTOM:
-                lp.gravity = Gravity.BOTTOM | Gravity.CENTER;
+                toastDialog.getWindow().setGravity(Gravity.BOTTOM | Gravity.CENTER);
+                toastDialog.getWindow().getAttributes().y = Toasty.dip(toastDialog.getContext(), Toasty.offsetYDip);
                 break;
         }
     }
@@ -128,105 +114,61 @@ public class ToastHandler extends Handler {
             removeMessages(SHOW);
             removeMessages(HIDE);
         }
-        isShowing = false;
     }
 
     private void showToast(final ToastyBuilder builder) {
         if (!isAppOnForeground()) {  //检查activity处于前台才显示，否则，移除该activity所有的toast
-            ToastInterface toastView = mWeakView.get();
-            if (toastView == null) {
+            ToastDialog toastDialog = mWeakView.get();
+            if (toastDialog == null) {
                 return;
             }
-            toastView.getRealView().setVisibility(View.GONE);
+            toastDialog.dismiss();
             //找出所有该activity对toast，并移除
             clear();
             return;
         }
-        // 显示动画
-        AlphaAnimation mFadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-        mFadeInAnimation.setDuration(ANIMATION_DURATION);
-
-        mFadeInAnimation.setAnimationListener(new Animation.AnimationListener() {
+        ToastDialog toastDialog = mWeakView.get();
+        if (toastDialog == null) {
+            return;
+        }
+        toastDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-                isShowing = true;
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                Log.d("PToast", getClass().getSimpleName() + "------mFadeInAnimation-onAnimationEnd");
+            public void onShow(DialogInterface dialog) {
                 sendEmptyMessageDelayed(HIDE, builder.getDuration());
             }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
         });
-        ToastInterface toastView = mWeakView.get();
-        if (toastView == null) {
-            return;
-        }
-        toastView.getRealView().clearAnimation();
-        toastView.getRealView().setVisibility(View.VISIBLE);
-        toastView.getRealView().startAnimation(mFadeInAnimation);
-
-
-    }
-
-    private void hideToast() {
-        if (!isAppOnForeground()) {
-            ToastInterface toastView = mWeakView.get();
-            if (toastView == null) {
-                return;
-            }
-            toastView.getRealView().setVisibility(View.GONE);
-            //找出所有该activity对toast，并移除
-            clear();
-            return;
-        }
-        // 消失动画
-        final AlphaAnimation mFadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mFadeOutAnimation.setDuration(ANIMATION_DURATION);
-        mFadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+        toastDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-                Log.d("PToast", getClass().getSimpleName() + "------mFadeOutAnimation-onAnimationStart");
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                Log.d("PToast", getClass().getSimpleName() + "------mFadeOutAnimation-onAnimationEnd");
-                // 隐藏布局，不使用remove方法为防止多次创建多个布局
-                ToastInterface toastView = mWeakView.get();
-                if (toastView == null) {
+            public void onDismiss(DialogInterface dialog) {
+                ToastDialog toastDialog = mWeakView.get();
+                if (toastDialog == null) {
                     return;
                 }
-                toastView.getRealView().setVisibility(View.GONE);
-                isShowing = false;
                 if (!queue.isEmpty()) {
                     ToastyBuilder builder = queue.removeLast();
                     setToastMsg(builder);
                     showToast(builder);
                 }
             }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
         });
-        ToastInterface toastView = mWeakView.get();
-        if (toastView == null) {
+        toastDialog.show();
+
+
+    }
+
+    private void hideToast() {
+        ToastDialog toastDialog = mWeakView.get();
+        if (toastDialog == null) {
             return;
         }
-        toastView.getRealView().startAnimation(mFadeOutAnimation);
+        toastDialog.dismiss();
+        return;
     }
 
 
-    final private static int ADD = -0x300001;
-    final private static int SHOW = -0x300002;
-    final private static int HIDE = -0x300003;
+    final private static int ADD = 3001;
+    final private static int SHOW = 3002;
+    final private static int HIDE = 3003;
 
     protected void show(ToastyBuilder builder) {
         Message message = obtainMessage();
@@ -253,4 +195,6 @@ public class ToastHandler extends Handler {
 
         return false;
     }
+
+
 }

@@ -9,7 +9,7 @@
 
 #### 在build.gradle中导入
 ~~~
-compile 'com.hexiang:toasty:1.0.4'
+compile 'com.hexiang:toasty:1.0.5'
 ~~~
 #### 使用：
 ~~~
@@ -37,9 +37,6 @@ compile 'com.hexiang:toasty:1.0.4'
                     bg.setColor(0x77000000);
                     toastView.setBackgroundDrawable(bg);
 
-                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                    lp.setMargins(0, dip(activity, 50f), 0, dip(activity, 50f));
-                    toastView.setLayoutParams(lp);
                     return toastView;
             }
         });

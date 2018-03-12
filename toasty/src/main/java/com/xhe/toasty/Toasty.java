@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Looper;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.xhe.toasty.interfaces.ToastInterface;
@@ -41,6 +42,38 @@ public class Toasty {
     public static final int DISCARD = -1;
     public static final int REPLACE_NOW = 0;
     public static final int REPLACE_BEHIND = 1;
+
+    /**
+     * 距离顶部或者底部的偏移量dip，都填正值，自动适应
+     *
+     * @author gengqiquan
+     * @date 2018/3/9 下午4:14
+     */
+    public static int offsetYDip = 50;
+
+    /**
+     * 显示隐藏的动画资源id
+     *
+     * @author gengqiquan
+     * @date 2018/3/9 下午4:28
+     */
+    public static int animationsRes = -1;
+
+    protected static int getOffsetYDip() {
+        return offsetYDip;
+    }
+
+    public static void setOffsetYDip(int offsetYDip) {
+        Toasty.offsetYDip = offsetYDip;
+    }
+
+    protected static int getAnimationsRes() {
+        return animationsRes;
+    }
+
+    public static void setAnimationsRes(int animationsRes) {
+        Toasty.animationsRes = animationsRes;
+    }
 
 
     protected static ToastFactory getToastFactory() {
@@ -105,9 +138,6 @@ public class Toasty {
                 bg.setColor(0x77000000);
                 toastView.setBackgroundDrawable(bg);
 
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0, dip(activity, 50f), 0, dip(activity, 50f));
-                toastView.setLayoutParams(lp);
                 return toastView;
             }
         };
@@ -119,7 +149,7 @@ public class Toasty {
      * @param context
      * @return
      */
-    private static int dip(Context context, float dpVal) {
+    protected static int dip(Context context, float dpVal) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 dpVal, context.getResources().getDisplayMetrics());
     }

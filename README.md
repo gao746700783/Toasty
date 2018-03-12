@@ -9,7 +9,7 @@
 
 #### 在build.gradle中导入
 ~~~
-compile 'com.hexiang:toasty:1.0.5'
+compile 'com.hexiang:toasty:1.0.6'
 ~~~
 #### 使用：
 ~~~

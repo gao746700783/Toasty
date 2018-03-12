@@ -11,7 +11,7 @@ import com.xhe.toasty.interfaces.ToastRepalceType;
  * Created by hexiang on 2018/2/6.
  */
 final public class ToastyBuilder {
-
+    private String activityName;//界面类
     private String msg;//展示的内容
     /**
      * 持续时间
@@ -30,8 +30,9 @@ final public class ToastyBuilder {
 
     ToastHandler toastHandler;
 
-    protected ToastyBuilder(ToastHandler toastHandler) {
+    protected ToastyBuilder(ToastHandler toastHandler, String activityName) {
         this.toastHandler = toastHandler;
+        this.activityName = activityName;
     }
 
     /**
@@ -94,6 +95,11 @@ final public class ToastyBuilder {
     protected int getReplaceType() {
         return replaceType;
     }
+
+    protected String getActivityName() {
+        return activityName;
+    }
+
 
     public void show() {
         toastHandler.show(this);

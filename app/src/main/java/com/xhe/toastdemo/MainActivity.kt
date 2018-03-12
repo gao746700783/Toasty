@@ -1,13 +1,10 @@
 package com.xhe.toastdemo
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
-import android.view.Window
-import android.view.WindowManager
 import com.xhe.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -1,17 +1,13 @@
 package com.xhe.toasty;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
-import java.util.List;
 
 /**
  * Created by gengqiquan on 2018/3/7.
@@ -116,8 +112,10 @@ public class ToastHandler extends Handler {
         }
     }
 
+
     private void showToast(final ToastyBuilder builder) {
-        if (!isAppOnForeground()) {  //检查activity处于前台才显示，否则，移除该activity所有的toast
+        Activity activity = mWeakActivity.get();
+        if (activity == null || activity.isFinishing() || !builder.getActivityName().equals(activity.getClass().getSimpleName())) {
             ToastDialog toastDialog = mWeakView.get();
             if (toastDialog == null) {
                 return;
@@ -162,7 +160,6 @@ public class ToastHandler extends Handler {
             return;
         }
         toastDialog.dismiss();
-        return;
     }
 
 
@@ -175,25 +172,6 @@ public class ToastHandler extends Handler {
         message.obj = builder;
         message.what = ADD;
         sendMessage(message);
-    }
-
-    private boolean isAppOnForeground() {
-        Activity activity = mWeakActivity.get();
-        if (activity == null || activity.isFinishing()) {
-            return false;
-        }
-        ActivityManager manager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> tasksInfo = manager.getRunningTasks(1);
-        if (tasksInfo.size() > 0) {
-            Log.d("PToast", "top Activity = " + tasksInfo.get(0).topActivity.getClassName());
-            if (activity.getClass().getName().equals(tasksInfo.get(0).topActivity.getClassName())) {
-                Log.d("PToast", activity.getClass().getSimpleName() + "----在前台");
-                return true;
-            }
-        }
-        Log.d("PToast", activity.getClass().getSimpleName() + "----在后台");
-
-        return false;
     }
 
 

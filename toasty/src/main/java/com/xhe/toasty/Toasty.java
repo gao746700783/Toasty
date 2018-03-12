@@ -7,8 +7,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Looper;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.xhe.toasty.interfaces.ToastInterface;
 
@@ -112,7 +110,7 @@ public class Toasty {
             toastFactory = createDefaultToastFactory();
         }
         handler = ToastHandler.getInstance((Activity) context);
-        return new ToastyBuilder(handler);
+        return new ToastyBuilder(handler,context.getClass().getSimpleName());
     }
 
     /**

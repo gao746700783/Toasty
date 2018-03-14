@@ -15,7 +15,7 @@ import java.util.ArrayDeque;
 
 public class ToastHandler extends Handler {
     private static WeakReference<Activity> mWeakActivity;
-    private WeakReference<ToastDialog> mWeakView;
+    private static WeakReference<ToastDialog> mWeakView;
 
     private static ArrayDeque<ToastyBuilder> queue = new ArrayDeque<>();
     private static ToastHandler handler;
@@ -32,6 +32,10 @@ public class ToastHandler extends Handler {
     protected static ToastHandler getInstance(Activity newActivity) {
         if (mWeakActivity == null || mWeakActivity.get() == null || !mWeakActivity.get().equals(newActivity)) {
             handler = new ToastHandler(newActivity);
+        }
+        if (mWeakView == null || mWeakView.get() == null) {
+            ToastDialog toastDialog = ToastDialog.createDialog(Toasty.getToastFactory().createToastView(newActivity));
+            mWeakView = new WeakReference<ToastDialog>(toastDialog);
         }
         return handler;
     }

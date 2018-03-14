@@ -110,7 +110,7 @@ public class Toasty {
             toastFactory = createDefaultToastFactory();
         }
         handler = ToastHandler.getInstance((Activity) context);
-        return new ToastyBuilder(handler,context.getClass().getSimpleName());
+        return new ToastyBuilder(handler, context.getClass().getSimpleName());
     }
 
     /**
@@ -123,7 +123,7 @@ public class Toasty {
 
         return new ToastFactory() {
             @Override
-            ToastInterface createToastView(Activity activity) {
+            public ToastInterface createToastView(Activity activity) {
                 ToastView toastView = new ToastView(activity);
                 toastView.setTextSize(13f);
                 toastView.setTextColor(Color.WHITE);

@@ -9,5 +9,5 @@ import com.xhe.toasty.interfaces.ToastInterface;
  */
 
 public abstract class ToastFactory {
-    abstract ToastInterface createToastView(Activity activity);
+    public abstract ToastInterface createToastView(Activity activity);
 }

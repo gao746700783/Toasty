@@ -1,6 +1,7 @@
 package com.xhe.toastdemo
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -14,12 +15,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         tv1.setOnClickListener {
-            Toasty.with(this)
-                    .message(tv1.text.toString())
-                    .duration(Toasty.LENGTH_LONG) //持续时间
-                    .gravity(Gravity.BOTTOM) //位置
-                    .replaceType(Toasty.REPLACE_NOW)//立即替换当前显示中的
-                    .show()
+            val phoneIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:4008587585,,3"))
+            startActivity(phoneIntent)
+//            Toasty.with(this)
+//                    .message(tv1.text.toString())
+//                    .duration(Toasty.LENGTH_LONG) //持续时间
+//                    .gravity(Gravity.BOTTOM) //位置
+//                    .replaceType(Toasty.REPLACE_NOW)//立即替换当前显示中的
+//                    .show()
         }
 
         tv2.setOnClickListener {

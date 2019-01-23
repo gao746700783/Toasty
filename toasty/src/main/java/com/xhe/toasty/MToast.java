@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xhe.toasty.annotation.MToastDuration;
+import com.xhe.toasty.annotation.MToastGravity;
+
 /**
  *
  */
@@ -33,17 +36,10 @@ public class MToast {
 
     private Context mContext;
     private Activity mActivity;
+
     private ViewGroup mContainer;//父容器
 
     private long mDuration;
-
-    public long getDuration() {
-        return mDuration;
-    }
-
-    public void setDuration(long mDuration) {
-        this.mDuration = mDuration;
-    }
 
     private int mGravity;
     private int mOffsetX, mOffsetY;
@@ -54,9 +50,6 @@ public class MToast {
         return mToastView;
     }
 
-    public void setToastView(View mToastView) {
-        this.mToastView = mToastView;
-    }
     //    private TextView mToastTv;
 
     // animator
@@ -67,16 +60,7 @@ public class MToast {
     //    private static final int ANIMATION_DURATION = 200;//toast进入界面的动画所需时间
 
 
-
-    public ViewGroup getContainer() {
-        return mContainer;
-    }
-
-    public void setContainer(ViewGroup mContainer) {
-        this.mContainer = mContainer;
-    }
-
-    private final MToastManager mTM;
+    // private final MToastManager mTM;
     private final MToastHandler mTH;
 
     private MToast(Context context) {
@@ -91,13 +75,12 @@ public class MToast {
 
         this.mTH = MToastHandler.getInstance();
 
-
-        this.mTM = new MToastManager();
-
-        // 默认对齐方式 Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM
-        this.mTM.mGravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-        // 默认Y方向偏移 64dp
-        //this.mTM.mY = 300;
+        //        this.mTM = new MToastManager();
+        //
+        //        // 默认对齐方式 Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM
+        //        this.mTM.mGravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+        //        // 默认Y方向偏移 64dp
+        //        //this.mTM.mY = 300;
 
     }
 
@@ -171,34 +154,25 @@ public class MToast {
      */
     public void show() {
         if (mToastView == null) {
-            throw new RuntimeException("setView must have been called");
+            throw new RuntimeException("setView have not been called");
         }
 
-        if (mToastView instanceof LinearLayout) {
-            LinearLayout toastLayout = (LinearLayout) mToastView;
-            toastLayout.setGravity(mGravity | Gravity.CENTER);
-        }
+        this.mTH.mGravity = mGravity;
+        this.mTH.mDuration = mDuration;
+        this.mTH.mContainer = mContainer;
+        this.mTH.mX = mOffsetX;
+        this.mTH.mY = mOffsetY;
 
-        this.mTH.add(this);
-
-//        MToastManager tm = this.mTM;
-//        tm.mNextView = mToastView;
-//
-//        tm.mDuration = mDuration;
-//        tm.mX = mOffsetX;
-//        tm.mY = mOffsetY;
-//        tm.mGravity = mGravity | Gravity.CENTER_HORIZONTAL;
-//
-//        tm.enqueueToast();
+        this.mTH.enqueue(this);
     }
 
-    /**
-     * Close the view if it's showing, or don't show it if it isn't showing yet.
-     * You do not normally have to call this.  Normally view will disappear on its own
-     * after the appropriate duration.
-     */
-    public void cancel() {
-        this.mTM.cancel();
-    }
+    //    /**
+    //     * Close the view if it's showing, or don't show it if it isn't showing yet.
+    //     * You do not normally have to call this.  Normally view will disappear on its own
+    //     * after the appropriate duration.
+    //     */
+    //    public void cancel() {
+    //        this.mTH.cancel();
+    //    }
 
 }

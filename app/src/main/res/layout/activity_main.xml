@@ -38,4 +38,12 @@
         android:textColor="#fff"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="mtoast"
+        android:textSize="20sp" />
+
 </LinearLayout>

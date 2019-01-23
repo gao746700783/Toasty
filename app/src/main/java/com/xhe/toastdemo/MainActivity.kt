@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.xhe.toasty.MToast
 import com.xhe.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -34,6 +35,14 @@ class MainActivity : AppCompatActivity() {
         tv3.setOnClickListener {
             //            PToast.makeText(this, tv3.text.toString()).replace(false).show()
             startActivity(Intent(this, SecondsActivity::class.java))
+        }
+
+        tv4.setOnClickListener {
+            MToast.makeText(this,"弹出来")
+                    .gravity(MToast.GRAVITY_TOP)
+                    .duration(MToast.LENGTH_SHORT)
+                    .offset(0,10)
+                    .show()
         }
     }
 
